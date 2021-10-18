@@ -24,28 +24,4 @@ class qualys_agent::package {
   } else {
     $package_dep = undef
   }
-
-  # Fix permissions on all paths used by the agent as the package does not do this on install
-  $agent_paths = [
-    '/usr/local/qualys',
-    '/etc/qualys',
-    '/var/spool/qualys',
-  ]
-
-  if $qualys_agent::ensure != 'absent' && $qualys_agent::owner != 'root' && $qualys_agent::group != 'root' {
-    file { $agent_paths :
-      ensure  => 'directory',
-      group   => $qualys_agent::group,
-      owner   => $qualys_agent::owner,
-      require => [$package_dep, $qualys_agent::user::user_dep, $qualys_agent::user::group_dep],
-      recurse => true,
-    }
-    file { $qualys_agent::log_file_dir :
-      ensure  => 'directory',
-      group   => $qualys_agent::log_group_final,
-      owner   => $qualys_agent::log_owner_final,
-      require => $package_dep,
-      recurse => false,
-    }
-  }
 }
