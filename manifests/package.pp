@@ -32,7 +32,7 @@ class qualys_agent::package {
     '/var/spool/qualys',
   ]
 
-  if $qualys_agent::ensure != 'absent' {
+  if $qualys_agent::ensure != 'absent' && $qualys_agent::owner != 'root' && $qualys_agent::group != 'root' {
     file { $agent_paths :
       ensure  => 'directory',
       group   => $qualys_agent::group,
